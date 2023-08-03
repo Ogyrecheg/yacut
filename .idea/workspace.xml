@@ -61,7 +61,7 @@
       <recent name="C:\Dev\yacut\html" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_endpoints.test_invalid_short_url">
+  <component name="RunManager" selected="Python tests.pytest for test_endpoints.test_create_empty_body">
     <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="yacut" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -120,8 +120,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_endpoints.test_invalid_short_url" />
         <item itemvalue="Python tests.pytest for test_endpoints.test_create_empty_body" />
+        <item itemvalue="Python tests.pytest for test_endpoints.test_invalid_short_url" />
         <item itemvalue="Python.utils" />
       </list>
     </recent_temporary>
@@ -141,7 +141,7 @@
       <workItem from="1690890003558" duration="13800000" />
       <workItem from="1690976199665" duration="9780000" />
       <workItem from="1690986254905" duration="19389000" />
-      <workItem from="1691057316068" duration="445000" />
+      <workItem from="1691057316068" duration="4865000" />
     </task>
     <servers />
   </component>
@@ -154,6 +154,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/yacut$utils.coverage" NAME="utils Coverage Results" MODIFIED="1690838598138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/yacut" />
     <SUITE FILE_PATH="coverage/yacut$pytest_for_test_endpoints_test_invalid_short_url.coverage" NAME="pytest for test_endpoints.test_invalid_short_url Coverage Results" MODIFIED="1691003148670" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/yacut$pytest_for_test_endpoints_test_create_empty_body.coverage" NAME="pytest for test_endpoints.test_create_empty_body Coverage Results" MODIFIED="1691002736386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/yacut$pytest_for_test_endpoints_test_create_empty_body.coverage" NAME="pytest for test_endpoints.test_create_empty_body Coverage Results" MODIFIED="1691059338632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
 </project>

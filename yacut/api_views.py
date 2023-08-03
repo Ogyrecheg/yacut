@@ -20,14 +20,14 @@ def get_original_link(short_id):
 
 @app.route('/api/id/', methods=['POST'])
 def get_short_link():
-    data = request.get_json()
-    custom_id = data.get('custom_id', None)
-    if data is None:
+    data = request.get_json(silent=True)
+    if not data:
         raise InvalidAPIUsage('Отсутствует тело запроса')
 
     if 'url' not in data:
         raise InvalidAPIUsage('"url" является обязательным полем!')
 
+    custom_id = data.get('custom_id', None)
     if custom_id is None or custom_id == '':
         data['custom_id'] = get_unique_short_id()
 
