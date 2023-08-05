@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template
 from . import app, db
 from .forms import URLForm
 from .models import URLMap
-from .utils import get_unique_short_id
+from .utils import make_short_link
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -13,7 +13,7 @@ def index_view():
         return render_template('index.html', form=form)
     custom_id = form.custom_id.data
     if not custom_id:
-        custom_id = get_unique_short_id()
+        custom_id = make_short_link()
     elif URLMap.query.filter_by(short=custom_id).first() is not None:
         flash(f'Имя {custom_id} уже занято!')
         return render_template('index.html', form=form)

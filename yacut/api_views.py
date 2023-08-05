@@ -1,21 +1,19 @@
-import re
 from http import HTTPStatus
 
 from flask import jsonify, request
 
-from . import app, db
-from .constants import API_REGEX_MATCH
+from . import app
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
-from .utils import get_unique_short_id
+from .utils import make_short_link
 
 
 @app.route('/api/id/<short_id>/', methods=['GET'])
 def get_original_link(short_id):
+    if not URLMap.check_short_link_in_db(short_id):
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
     link = URLMap.query.filter_by(short=short_id).first()
-    if link is not None:
-        return jsonify({'url': link.original}), HTTPStatus.OK
-    raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
+    return jsonify({'url': link.original}), HTTPStatus.OK
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -29,16 +27,14 @@ def get_short_link():
 
     custom_id = data.get('custom_id', None)
     if custom_id is None or custom_id == '':
-        data['custom_id'] = get_unique_short_id()
+        custom_id = make_short_link()
+        data.update({'custom_id': custom_id})
 
-    if URLMap.query.filter_by(short=data['custom_id']).first() is not None:
+    if URLMap.check_short_link_in_db(custom_id):
         raise InvalidAPIUsage(f'Имя "{custom_id}" уже занято.')
 
-    if not re.match(API_REGEX_MATCH, data['custom_id']):
+    if not URLMap.check_incoming_custom_id_by_regex(data['custom_id']):
         raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
 
-    link = URLMap()
-    link.from_dict(data)
-    db.session.add(link)
-    db.session.commit()
+    link = URLMap.create_link_and_add_in_db(data)
     return jsonify(link.to_dict()), HTTPStatus.CREATED
