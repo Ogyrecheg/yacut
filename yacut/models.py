@@ -19,11 +19,6 @@ class URLMap(db.Model):
             short_link=url_for('index_view', _external=True) + self.short
         )
 
-    # def from_dict(self, data):
-    #     for field in API_FIELDS.keys():
-    #         if field in data:
-    #             setattr(self, API_FIELDS[field], data[field])
-
     @staticmethod
     def get_link_by_short_id(short_id):
         return URLMap.query.filter_by(short=short_id).first()
