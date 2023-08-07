@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import url_for
 
 from . import db
-from .constants import API_FIELDS, API_REGEX_MATCH
+from .constants import API_REGEX_MATCH
 
 
 class URLMap(db.Model):
@@ -19,21 +19,24 @@ class URLMap(db.Model):
             short_link=url_for('index_view', _external=True) + self.short
         )
 
-    def from_dict(self, data):
-        for field in API_FIELDS.keys():
-            if field in data:
-                setattr(self, API_FIELDS[field], data[field])
+    # def from_dict(self, data):
+    #     for field in API_FIELDS.keys():
+    #         if field in data:
+    #             setattr(self, API_FIELDS[field], data[field])
 
     @staticmethod
-    def check_short_link_in_db(custom_id):
+    def get_link_by_short_id(short_id):
+        return URLMap.query.filter_by(short=short_id).first()
+
+    @staticmethod
+    def check_short_link_exists(custom_id):
         return bool(
             URLMap.query.filter_by(short=custom_id).first()
         )
 
     @staticmethod
-    def create_link_and_add_in_db(data):
-        link = URLMap()
-        link.from_dict(data)
+    def create_link_and_add_in_db(original_link, custom_id):
+        link = URLMap(original=original_link, short=custom_id)
         db.session.add(link)
         db.session.commit()
         return link

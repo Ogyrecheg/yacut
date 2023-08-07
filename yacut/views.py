@@ -1,6 +1,6 @@
-from flask import flash, redirect, render_template
+from flask import abort, flash, redirect, render_template
 
-from . import app, db
+from . import app
 from .forms import URLForm
 from .models import URLMap
 from .utils import make_short_link
@@ -11,22 +11,22 @@ def index_view():
     form = URLForm()
     if not form.validate_on_submit():
         return render_template('index.html', form=form)
-    custom_id = form.custom_id.data
-    if not custom_id:
-        custom_id = make_short_link()
-    elif URLMap.query.filter_by(short=custom_id).first() is not None:
-        flash(f'Имя {custom_id} уже занято!')
+    if not form.custom_id.data:
+        form.custom_id.data = make_short_link()
+    elif URLMap.check_short_link_exists(form.custom_id.data):
+        flash(f'Имя {form.custom_id.data} уже занято!')
         return render_template('index.html', form=form)
-    link = URLMap(
-        original=form.original_link.data,
-        short=custom_id,
+
+    link = URLMap.create_link_and_add_in_db(
+        form.original_link.data,
+        form.custom_id.data,
     )
-    db.session.add(link)
-    db.session.commit()
     return render_template('index.html', form=form, link=link)
 
 
 @app.route('/<short>')
 def redirect_short_link(short):
-    link = URLMap.query.filter_by(short=short).first_or_404()
+    link = URLMap.get_link_by_short_id(short)
+    if not link:
+        abort(404)
     return redirect(link.original)
