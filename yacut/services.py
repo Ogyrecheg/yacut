@@ -15,8 +15,10 @@ class URLMapCreator:
 
     @staticmethod
     def get_link_by_short_id(short_id):
-        if not URLMap.query.filter_by(short=short_id).first():
+        link = URLMap.query.filter_by(short=short_id).first()
+        if not link:
             raise ShortURLNotFound
+        return link
 
     @staticmethod
     def short_link_exists(custom_id):
