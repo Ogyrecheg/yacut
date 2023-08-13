@@ -11,7 +11,10 @@ from .models import URLMap
 class URLMapCreator:
     @staticmethod
     def make_short_link():
-        return ''.join(random.sample(SYMBOLS, MAX_LENGTH_SHORT_ID))
+        short_id = ''.join(random.sample(SYMBOLS, MAX_LENGTH_SHORT_ID))
+        if not URLMapCreator.short_link_exists(short_id):
+            return short_id
+        return URLMapCreator.make_short_link()
 
     @staticmethod
     def get_link_by_short_id(short_id):
@@ -22,8 +25,9 @@ class URLMapCreator:
 
     @staticmethod
     def short_link_exists(custom_id):
-        if URLMap.query.filter_by(short=custom_id).first():
-            raise ShortLinkExists
+        return bool(
+            URLMap.query.filter_by(short=custom_id).first()
+        )
 
     @staticmethod
     def create_link_and_add_in_db_new(data, form_data_exists=False):
@@ -32,13 +36,10 @@ class URLMapCreator:
                 raise DataNotExists
             if 'url' not in data:
                 raise URLNotExistsInData
-            URLMapCreator.custom_id_exists_or_create(data)
-            URLMapCreator.short_link_exists(data['custom_id'])
-            if not URLMapCreator.check_incoming_custom_id_by_regex(data['custom_id']):
-                raise FailedVerificationByRegex
+            URLMapCreator.validate_custom_id(data)
             original_url = data['url']
         else:
-            URLMapCreator.custom_id_exists_or_create(data)
+            URLMapCreator.validate_custom_id(data)
             original_url = data['original_link']
 
         link = URLMap(original=original_url, short=data['custom_id'])
@@ -57,4 +58,16 @@ class URLMapCreator:
         if ('custom_id' not in data or
                 data['custom_id'] == '' or data['custom_id'] is None):
             data.update({'custom_id': URLMapCreator.make_short_link()})
+        return data
+
+    @staticmethod
+    def validate_custom_id(data):
+        if 'custom_id' in data:
+            if URLMapCreator.short_link_exists(data['custom_id']):
+                raise ShortLinkExists
+        URLMapCreator.custom_id_exists_or_create(data)
+        if not URLMapCreator.check_incoming_custom_id_by_regex(
+                data['custom_id']
+        ):
+            raise FailedVerificationByRegex
         return data

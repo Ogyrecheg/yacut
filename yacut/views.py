@@ -12,18 +12,17 @@ def index_view():
     if not form.validate_on_submit():
         return render_template('index.html', form=form)
     try:
-        URLMapCreator.short_link_exists(form.custom_id.data)
+        return render_template(
+            'index.html',
+            form=form,
+            link=URLMapCreator.create_link_and_add_in_db_new(
+                form.data,
+                form_data_exists=True
+            )
+        )
     except ShortLinkExists:
         flash(f'Имя {form.custom_id.data} уже занято!')
         return render_template('index.html', form=form)
-    return render_template(
-        'index.html',
-        form=form,
-        link=URLMapCreator.create_link_and_add_in_db_new(
-            form.data,
-            form_data_exists=True
-        )
-    )
 
 
 @app.route('/<short>')
